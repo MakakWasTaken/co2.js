@@ -4,6 +4,7 @@
   "description": "Work out the co2 of your digital services",
   "main": "src/index.js",
   "types": "types/index.d.ts",
+  "type": "module",
   "scripts": {
     "test": "jest src",
     "test:watch": "jest --watch src",
