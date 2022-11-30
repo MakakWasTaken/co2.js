@@ -28,7 +28,8 @@
     "intensity-data:marginal": "node data/functions/generate_marginal_co2.js",
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
     "format-data": "cd data && prettier --write '**/*.{js,json}'",
-    "typescript:check": "tsc --noEmit"
+    "typescript:check": "tsc --noEmit",
+    "prepare": "npm run build:node"
   },
   "keywords": [
     "sustainability",
