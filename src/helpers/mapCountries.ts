@@ -3,11 +3,11 @@
  * @returns {array} - Returns an array of objects.
  */
 
-const fs = require("fs");
-const parseCSVRow = require("./parseCSVRow");
+import fs from "fs";
+import parseCSVRow from "../../src/helpers/parseCSVRow";
 const countries = fs.readFileSync("data/fixtures/countries.csv");
 
-const countryArray = [];
+const countryArray: { [key: string]: string }[] = [];
 
 const countriesRows = countries.toString().split("\n");
 
@@ -15,7 +15,7 @@ const countryHeaders = parseCSVRow(countriesRows[0]);
 
 const mapCountries = () => {
   for (let i = 1; i < countriesRows.length; i++) {
-    const countryObject = {};
+    const countryObject: { [key: string]: string } = {};
     const currentArrayString = countriesRows[i];
 
     if (
@@ -24,9 +24,9 @@ const mapCountries = () => {
     )
       continue;
 
-    let jsonProperties = parseCSVRow(currentArrayString);
+    const jsonProperties = parseCSVRow(currentArrayString);
 
-    for (let column in countryHeaders) {
+    for (const column in countryHeaders) {
       if (!column || column === "") continue;
       countryObject[countryHeaders[column].replace("\r", "")] = jsonProperties[
         column
@@ -39,4 +39,4 @@ const mapCountries = () => {
   return countryArray;
 };
 
-module.exports = mapCountries;
+export default mapCountries;

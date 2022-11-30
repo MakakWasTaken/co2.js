@@ -61,7 +61,7 @@ describe("co2", () => {
       it("returns lower CO2 for page served from green site", () => {
         const pages = pagexray.convert(har);
         const pageXrayRun = pages[0];
-        let green = [
+        const green = [
           "www.thegreenwebfoundation.org",
           "fonts.googleapis.com",
           "ajax.googleapis.com",
@@ -78,7 +78,7 @@ describe("co2", () => {
         const pages = pagexray.convert(har);
         const pageXrayRun = pages[0];
         // green can be true, or a array containing entries
-        let green = [
+        const green = [
           "www.thegreenwebfoundation.org",
           "fonts.googleapis.com",
           "ajax.googleapis.com",
@@ -114,7 +114,7 @@ describe("co2", () => {
           "api.thegreenwebfoundation.org",
         ];
 
-        for (let obj of res) {
+        for (const obj of res) {
           expect(domains.indexOf(obj.domain)).toBeGreaterThan(-1);
           expect(typeof obj.co2).toBe("number");
         }
@@ -137,10 +137,10 @@ describe("co2", () => {
         const res = co2.perDomain(pageXrayRun);
         const resWithGreen = co2.perDomain(pageXrayRun, greenDomains);
 
-        for (let obj of res) {
+        for (const obj of res) {
           expect(typeof obj.co2).toBe("number");
         }
-        for (let obj of greenDomains) {
+        for (const obj of greenDomains) {
           let index = 0;
           expect(resWithGreen[index].co2).toBeLessThan(res[index].co2);
           index++;
@@ -224,7 +224,7 @@ describe("co2", () => {
       it("returns lower CO2 for page served from green site", () => {
         const pages = pagexray.convert(har);
         const pageXrayRun = pages[0];
-        let green = [
+        const green = [
           "www.thegreenwebfoundation.org",
           "fonts.googleapis.com",
           "ajax.googleapis.com",
@@ -241,7 +241,7 @@ describe("co2", () => {
         const pages = pagexray.convert(har);
         const pageXrayRun = pages[0];
         // green can be true, or a array containing entries
-        let green = [
+        const green = [
           "www.thegreenwebfoundation.org",
           "fonts.googleapis.com",
           "ajax.googleapis.com",
@@ -277,7 +277,7 @@ describe("co2", () => {
           "api.thegreenwebfoundation.org",
         ];
 
-        for (let obj of res) {
+        for (const obj of res) {
           expect(domains.indexOf(obj.domain)).toBeGreaterThan(-1);
           expect(typeof obj.co2).toBe("number");
         }
@@ -300,10 +300,10 @@ describe("co2", () => {
         const res = co2.perDomain(pageXrayRun);
         const resWithGreen = co2.perDomain(pageXrayRun, greenDomains);
 
-        for (let obj of res) {
+        for (const obj of res) {
           expect(typeof obj.co2).toBe("number");
         }
-        for (let obj of greenDomains) {
+        for (const obj of greenDomains) {
           let index = 0;
           expect(resWithGreen[index].co2).toBeLessThan(res[index].co2);
           index++;

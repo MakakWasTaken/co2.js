@@ -85,7 +85,7 @@ class CO2 {
 
   perDomain(pageXray: PageXRay, greenDomains: string[] = []) {
     const co2PerDomain = [];
-    for (let domain of Object.keys(pageXray.domains)) {
+    for (const domain of Object.keys(pageXray.domains)) {
       let co2;
       if (greenDomains && greenDomains.indexOf(domain) > -1) {
         co2 = this.perByte(pageXray.domains[domain].transferSize, true);
@@ -113,7 +113,7 @@ class CO2 {
 
     const domainCO2 = this.perDomain(pageXray, greenDomains);
     let totalCO2 = 0;
-    for (let domain of domainCO2) {
+    for (const domain of domainCO2) {
       totalCO2 += domain.co2;
     }
     return totalCO2;
@@ -122,7 +122,7 @@ class CO2 {
   perContentType(pageXray: PageXRay, greenDomains: string[] = []) {
     const co2PerContentType: { [key: string]: CO2Result & { type?: string } } =
       {};
-    for (let asset of pageXray.assets) {
+    for (const asset of pageXray.assets) {
       const domain = new URL(asset.url).hostname;
       const transferSize = asset.transferSize;
       const co2ForTransfer = this.perByte(
@@ -138,7 +138,7 @@ class CO2 {
     }
     // restructure and sort
     const all = [];
-    for (let type of Object.keys(co2PerContentType)) {
+    for (const type of Object.keys(co2PerContentType)) {
       all.push({
         type,
         co2: co2PerContentType[type].co2,
@@ -151,7 +151,7 @@ class CO2 {
 
   dirtiestResources(pageXray: PageXRay, greenDomains: string[] = []) {
     const allAssets = [];
-    for (let asset of pageXray.assets) {
+    for (const asset of pageXray.assets) {
       const domain = new URL(asset.url).hostname;
       const transferSize = asset.transferSize;
       const co2ForTransfer = this.perByte(
@@ -170,7 +170,7 @@ class CO2 {
     let thirdParty = 0;
     // calculate co2 per first/third party
     const firstPartyRegEx = pageXray.firstPartyRegEx;
-    for (let d of Object.keys(pageXray.domains)) {
+    for (const d of Object.keys(pageXray.domains)) {
       if (!d.match(firstPartyRegEx)) {
         thirdParty += this.perByte(
           pageXray.domains[d].transferSize,

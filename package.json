@@ -2,13 +2,17 @@
   "name": "@tgwf/co2",
   "version": "0.11.3",
   "description": "Work out the co2 of your digital services",
-  "main": "src/index.ts",
-  "types": "dist",
+  "type": "commonjs",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "scripts": {
     "test": "jest src",
     "test:watch": "jest --watch src",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
+    "clean": "rm -rf ./lib ./dist",
+    "lint": "eslint --fix . && prettier --write .",
+    "build": "tsc -b",
+    "check": "npm run check:tsc",
+    "check:tsc": "tsc -p . --noEmit",
     "serve": "python -m http.server --directory ./public",
     "release:minor": "npm run build && npm run intensity-data && npm run format-data && np minor",
     "release:patch": "npm run build && npm run intensity-data && npm run format-data && np patch",
@@ -16,10 +20,7 @@
     "intensity-data:average": "node data/functions/generate_average_co2.js",
     "intensity-data:marginal": "node data/functions/generate_marginal_co2.js",
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
-    "format-data": "cd data && prettier --write '**/*.{js,json}'",
-    "typescript:check": "tsc --noEmit",
-    "typescript:build": "tsc -b",
-    "prepare": "npm run typescript:build"
+    "format-data": "cd data && prettier --write '**/*.{js,json}'"
   },
   "keywords": [
     "sustainability",
@@ -51,9 +52,6 @@
     "pagexray": "^4.4.2",
     "prettier": "^2.6.2",
     "ts-jest": "^29.0.3"
-  },
-  "np": {
-    "yarn": false
   },
   "publishConfig": {
     "access": "public"

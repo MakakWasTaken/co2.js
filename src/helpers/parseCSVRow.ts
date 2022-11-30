@@ -4,7 +4,7 @@
  * @returns {array} - Returns an array of values.
  */
 
-const parseCSVRow = (currentArrayString) => {
+const parseCSVRow = (currentArrayString: string) => {
   let string = "";
   let quoteFlag = 0;
   // Iterate over the current array element and generate a string
@@ -25,4 +25,4 @@ const parseCSVRow = (currentArrayString) => {
   return string.split("|");
 };
 
-module.exports = parseCSVRow;
+export default parseCSVRow;

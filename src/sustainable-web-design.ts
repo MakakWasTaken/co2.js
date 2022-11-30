@@ -36,7 +36,9 @@ const FIRST_TIME_VIEWING_PERCENTAGE = 0.75;
 const RETURNING_VISITOR_PERCENTAGE = 0.25;
 const PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD = 0.02;
 
-interface SustainableWebDesignOptions {}
+interface SustainableWebDesignOptions {
+  test?: number;
+}
 
 class SustainableWebDesign {
   options?: SustainableWebDesignOptions;

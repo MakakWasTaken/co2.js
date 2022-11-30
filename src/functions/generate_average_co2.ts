@@ -1,7 +1,7 @@
-const fs = require("fs");
+import fs from "fs";
 const csv = fs.readFileSync("data/co2-intensities-ember-2021.csv");
-const parseCSVRow = require("../utils/parseCSVRow");
-const getCountryCodes = require("../utils/getCountryCodes");
+import parseCSVRow from "../helpers/parseCSVRow";
+import getCountryCodes from "../helpers/getCountryCodes";
 const type = "average";
 const source = "Ember";
 const year = "2021";
@@ -9,37 +9,37 @@ const year = "2021";
 const array = csv.toString().split("\n");
 
 /* Store the converted result into an array */
-const csvToJsonResult = {};
-const gridIntensityResults = {};
+const csvToJsonResult: { [key: string]: any } = {};
+const gridIntensityResults: { [key: string]: string } = {};
 
 /* Store the CSV column headers into separate variable */
 const headers = parseCSVRow(array[0]);
 
 /* Iterate over the remaining data rows */
-for (let currentArrayString of array) {
+for (const currentArrayString of array) {
   // If there's an empty line, keep calm and carry on.
   // Also, skip the first row since those are the headers.
   if (currentArrayString.length === 0 || currentArrayString === array[0])
     continue;
 
   /* Empty object to store result in key value pair */
-  const jsonObject = {};
+  const jsonObject: { [key: string]: string | string[] } = {};
 
   // Split the string by the pipe character
-  let jsonProperties = parseCSVRow(currentArrayString);
+  const jsonProperties = parseCSVRow(currentArrayString);
 
   // Ember sets the country value (3-digit country code) in the first column. If data is for a region instead, it will be in the second column.
   // We can assign the current country (or region) by using these fields.
-  let country = jsonProperties[0] || jsonProperties[1];
+  const country = jsonProperties[0] || jsonProperties[1];
 
   // Loop through the headers and assign the values to the JSON object
-  for (let column in headers) {
+  for (const column in headers) {
     // First check if the current property is an array string. If so, then we'll split it and map the results to an array.
     // We trim the values to remove any whitespace.
     if (jsonProperties[column].includes(",")) {
       jsonObject[headers[column]] = jsonProperties[column]
         .split(",")
-        .map((item) => item.trim());
+        .map((item: string) => item.trim());
     } else {
       // Otherwise, just assign the value to the JSON object.
       // We replace \r with an empty string to remove any carriage returns.
