@@ -1,10 +1,10 @@
 {
-  "name": "@tgwf/co2",
+  "name": "@makakwastaken/co2",
   "version": "0.11.3",
   "description": "Work out the co2 of your digital services",
   "type": "commonjs",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest src",
     "test:watch": "jest --watch src",
@@ -20,7 +20,8 @@
     "intensity-data:average": "node data/functions/generate_average_co2.js",
     "intensity-data:marginal": "node data/functions/generate_marginal_co2.js",
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
-    "format-data": "cd data && prettier --write '**/*.{js,json}'"
+    "format-data": "cd data && prettier --write '**/*.{js,json}'",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "sustainability",
