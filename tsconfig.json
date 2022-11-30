@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "server",
+    "baseUrl": ".",
+
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "strict": true,
+
+    "noImplicitAny": true,
+
+    "incremental": true,
+
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "useUnknownInCatchVariables": false,
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "removeComments": true,
+
+    "composite": true
+  },
+  "exclude": ["node_modules"]
+}

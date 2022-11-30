@@ -5,6 +5,7 @@
 One day, the internet will be powered by renewable energy. Until that day comes, there’ll be a CO2 cost that comes with every byte of data that’s uploaded or downloaded. By being able to calculate these emissions, developers can be empowered to create more efficient, lower carbon apps, websites, and software.
 
 ## [Documentation](https://developers.thegreenwebfoundation.org/co2js/overview/)
+
 ## [Changelog](/CHANGELOG.md)
 
 ## What is CO2.js?
@@ -15,7 +16,7 @@ CO2.js is a JavaScript library that enables developers a way to estimate the emi
 
 Being able to estimate the CO2 emissions associated with digital activities can be of benefit to both developers and users.
 
-Internally, you may want to use this library to create a *carbon budget* for your site or app. It is also useful for inclusion in dashboards and monitoring tools.
+Internally, you may want to use this library to create a _carbon budget_ for your site or app. It is also useful for inclusion in dashboards and monitoring tools.
 
 For user facing applications, CO2.js could be used to check & block the uploading of carbon intensive files. Or, to present users with information about the carbon impact of their online activities (such as browsing a website).
 
@@ -36,7 +37,7 @@ npm install @tgwf/co2
 You can import the CO2.js library into projects using Skypack.
 
 ```js
-import tgwf from 'https://cdn.skypack.dev/@tgwf/co2';
+import tgwf from "https://cdn.skypack.dev/@tgwf/co2";
 ```
 
 ## Using a JS CDN
@@ -67,10 +68,10 @@ You can also build the CO2.js library from the source code. To do this:
 1. Clone or fork the repository.
 1. Navigate to the folder on your machine and run `npm run build` in your terminal.
 1. Once the build has finished running, you will find a `/dist` folder has been created. Inside you can find:
-  
-    - `dist/cjs` - A CommonJS compatible build.
-    - `dist/esm` - An ES Modules compatible build.
-    - `dist/iife` - An Immediately Invoked Function Expression (IIFE) version of the library.
+
+   - `dist/cjs` - A CommonJS compatible build.
+   - `dist/esm` - An ES Modules compatible build.
+   - `dist/iife` - An Immediately Invoked Function Expression (IIFE) version of the library.
 
 ## Marginal and average emissions intensity data
 
@@ -81,13 +82,14 @@ CO2.js includes yearly average grid intensity data from [Ember](https://ember-cl
 You can import annual, country-level marginal or average grid intensity data into your projects directly from CO2.js. For example, if we wanted to use the average grid intensity for Australia in our project, we could use the code below:
 
 ```js
-import { averageIntensity } from '@tgwf/co2';
+import { averageIntensity } from "@tgwf/co2";
 const { data } = averageIntensity;
 const { AUS } = data;
-console.log({ AUS })
+console.log({ AUS });
 ```
 
 All countries are represented by their respective [Alpha-3 ISO country code](https://www.iso.org/obp/ui/#search).
+
 ## Publishing to NPM
 
 We use [`np`](https://www.npmjs.com/package/np) to publish new versions of this library to NPM. To do this:
@@ -96,7 +98,6 @@ We use [`np`](https://www.npmjs.com/package/np) to publish new versions of this 
 2. Then run `npx np <VERSION>`.
 3. `np` will run several automated steps to publish the new package to NPM.
 4. If everything runs successfully, you can then add release notes to GitHub for the newly published package.
-
 
 ## Licenses
 
