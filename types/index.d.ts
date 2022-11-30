@@ -11,7 +11,7 @@ export namespace co2 {
   }
 
   class CO2 {
-    model: SustainableWebDesign | OneByte;
+    model: any;
     constructor(options: CO2Options);
 
     perByte(bytes: number, green: boolean): number;
@@ -63,3 +63,5 @@ export namespace marginalIntensity {
   const type: string;
   const year: string;
 }
+
+export function getPageXray(url: string): Promise<PageXRay>;
