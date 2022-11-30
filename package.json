@@ -2,23 +2,14 @@
   "name": "@tgwf/co2",
   "version": "0.11.3",
   "description": "Work out the co2 of your digital services",
-  "main": "dist/cjs/index-node.js",
+  "main": "src/index.js",
   "types": "types/index.d.ts",
-  "module": "dist/esm/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index-node.js"
-    }
-  },
-  "type": "module",
   "scripts": {
     "test": "jest src",
     "test:watch": "jest --watch src",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix",
     "serve": "python -m http.server --directory ./public",
-    "build:node": "node .esbuild.node.js",
     "release:minor": "npm run build && npm run intensity-data && npm run format-data && np minor",
     "release:patch": "npm run build && npm run intensity-data && npm run format-data && np patch",
     "gitpod": "npm run build && cp ./dist/iife/index.js ./public && npm run serve",
@@ -26,8 +17,7 @@
     "intensity-data:marginal": "node data/functions/generate_marginal_co2.js",
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
     "format-data": "cd data && prettier --write '**/*.{js,json}'",
-    "typescript:check": "tsc --noEmit",
-    "prepare": "npm run build:node"
+    "typescript:check": "tsc --noEmit"
   },
   "keywords": [
     "sustainability",
