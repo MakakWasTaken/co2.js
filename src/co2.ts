@@ -1,10 +1,42 @@
 "use strict";
 
-import OneByte from "./1byte.js";
-import SustainableWebDesign from "./sustainable-web-design.js";
+import OneByte from "./1byte";
+import SustainableWebDesign from "./sustainable-web-design";
+
+export interface PageXRay {
+  domains: {
+    [key: string]: {
+      transferSize: number;
+      contentSize: number;
+      headerSize: number;
+      requests: number;
+      timings: {
+        blocked: number;
+        dns: number;
+        connect: number;
+        send: number;
+        wait: number;
+        receive: number;
+      };
+    };
+  };
+  assets: any[];
+  firstPartyRegEx: RegExp;
+}
+
+interface CO2Options {
+  model: string;
+}
+
+interface CO2Result {
+  co2: number;
+  transferSize: number;
+}
 
 class CO2 {
-  constructor(options) {
+  model: any;
+
+  constructor(options?: CO2Options) {
     this.model = new SustainableWebDesign();
     // Using optional chaining allows an empty object to be passed
     // in without breaking the code.
@@ -28,7 +60,7 @@ class CO2 {
    * @param {boolean} green
    * @return {number} the amount of CO2 in grammes
    */
-  perByte(bytes, green) {
+  perByte(bytes: number, green?: number | boolean) {
     return this.model.perByte(bytes, green);
   }
 
@@ -41,7 +73,7 @@ class CO2 {
    * @param {boolean} green
    * @return {number} the amount of CO2 in grammes
    */
-  perVisit(bytes, green) {
+  perVisit(bytes: number, green: number | boolean = false) {
     if (this.model?.perVisit) {
       return this.model.perVisit(bytes, green);
     } else {
@@ -51,7 +83,7 @@ class CO2 {
     }
   }
 
-  perDomain(pageXray, greenDomains) {
+  perDomain(pageXray: PageXRay, greenDomains: string[] = []) {
     const co2PerDomain = [];
     for (let domain of Object.keys(pageXray.domains)) {
       let co2;
@@ -71,7 +103,7 @@ class CO2 {
     return co2PerDomain;
   }
 
-  perPage(pageXray, green) {
+  perPage(pageXray: PageXRay, greenDomains: string[] = []) {
     // Accept an xray object, and if we receive a boolean as the second
     // argument, we assume every request we make is sent to a server
     // running on renwewable power.
@@ -79,7 +111,7 @@ class CO2 {
     // if we receive an array of domains, return a number accounting the
     // reduced CO2 from green hosted domains
 
-    const domainCO2 = this.perDomain(pageXray, green);
+    const domainCO2 = this.perDomain(pageXray, greenDomains);
     let totalCO2 = 0;
     for (let domain of domainCO2) {
       totalCO2 += domain.co2;
@@ -87,10 +119,11 @@ class CO2 {
     return totalCO2;
   }
 
-  perContentType(pageXray, greenDomains) {
-    const co2PerContentType = {};
+  perContentType(pageXray: PageXRay, greenDomains: string[] = []) {
+    const co2PerContentType: { [key: string]: CO2Result & { type?: string } } =
+      {};
     for (let asset of pageXray.assets) {
-      const domain = new URL(asset.url).domain;
+      const domain = new URL(asset.url).hostname;
       const transferSize = asset.transferSize;
       const co2ForTransfer = this.perByte(
         transferSize,
@@ -116,10 +149,10 @@ class CO2 {
     return all;
   }
 
-  dirtiestResources(pageXray, greenDomains) {
+  dirtiestResources(pageXray: PageXRay, greenDomains: string[] = []) {
     const allAssets = [];
     for (let asset of pageXray.assets) {
-      const domain = new URL(asset.url).domain;
+      const domain = new URL(asset.url).hostname;
       const transferSize = asset.transferSize;
       const co2ForTransfer = this.perByte(
         transferSize,
@@ -132,7 +165,7 @@ class CO2 {
     return allAssets.slice(0, allAssets.length > 10 ? 10 : allAssets.length);
   }
 
-  perParty(pageXray, greenDomains) {
+  perParty(pageXray: PageXRay, greenDomains: string[] = []) {
     let firstParty = 0;
     let thirdParty = 0;
     // calculate co2 per first/third party

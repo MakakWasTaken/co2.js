@@ -1,4 +1,5 @@
 import { getHar } from "./har-fetcher";
+// @ts-ignore
 import pagexray from "pagexray";
 
 /**
@@ -6,7 +7,7 @@ import pagexray from "pagexray";
  * @param {string} url The url to fetch
  * @returns {Promise<PageXray>} A promise that resolves to a PageXray object
  */
-export const getPageXray = async (url) => {
+export const getPageXray = async (url: string) => {
   // Get har
   const har = await getHar(url);
   // Get pageXray

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "server",
+    "rootDir": "src",
     "baseUrl": ".",
 
     "declaration": true,
@@ -10,6 +10,7 @@
 
     "strict": true,
 
+    "skipLibCheck": true,
     "noImplicitAny": true,
 
     "incremental": true,
@@ -18,11 +19,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "useUnknownInCatchVariables": false,
+    "forceConsistentCasingInFileNames": true,
     "target": "ES2022",
     "lib": ["dom", "dom.iterable", "ES2022"],
     "removeComments": true,
 
     "composite": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

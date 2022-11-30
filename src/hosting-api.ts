@@ -3,7 +3,7 @@
 import debugFactory from "debug";
 const log = debugFactory("tgwf:hostingAPI");
 
-function check(domain) {
+function check(domain: string | string[]) {
   // is it a single domain or an array of them?
   if (typeof domain === "string") {
     return checkAgainstAPI(domain);
@@ -12,7 +12,7 @@ function check(domain) {
   }
 }
 
-async function checkAgainstAPI(domain) {
+async function checkAgainstAPI(domain: string): Promise<boolean> {
   const req = await fetch(
     `https://api.thegreenwebfoundation.org/greencheck/${domain}`
   );
@@ -20,7 +20,7 @@ async function checkAgainstAPI(domain) {
   return res.green;
 }
 
-async function checkDomainsAgainstAPI(domains) {
+async function checkDomainsAgainstAPI(domains: string[]): Promise<string[]> {
   try {
     const apiPath = "https://api.thegreenwebfoundation.org/v2/greencheckmulti";
     const domainsString = JSON.stringify(domains);
@@ -43,7 +43,9 @@ async function checkDomainsAgainstAPI(domains) {
   }
 }
 
-function greenDomainsFromResults(greenResults) {
+function greenDomainsFromResults(greenResults: {
+  [key: string]: { green: boolean; url: string };
+}) {
   const entries = Object.entries(greenResults);
   const greenEntries = entries.filter(([key, val]) => val.green);
   return greenEntries.map(([key, val]) => val.url);

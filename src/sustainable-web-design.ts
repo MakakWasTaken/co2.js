@@ -11,8 +11,8 @@
 import debugFactory from "debug";
 const log = debugFactory("tgwf:sustainable-web-design");
 
-import { fileSize } from "./constants/index.js";
-import { formatNumber } from "./helpers/index.js";
+import { fileSize } from "./constants";
+import { formatNumber } from "./helpers";
 
 // this refers to the estimated total energy use for the internet around 2000 TWh,
 // divided by the total transfer it enables around 2500 exabytes
@@ -36,8 +36,12 @@ const FIRST_TIME_VIEWING_PERCENTAGE = 0.75;
 const RETURNING_VISITOR_PERCENTAGE = 0.25;
 const PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD = 0.02;
 
+interface SustainableWebDesignOptions {}
+
 class SustainableWebDesign {
-  constructor(options) {
+  options?: SustainableWebDesignOptions;
+
+  constructor(options?: SustainableWebDesignOptions) {
     this.options = options;
   }
 
@@ -49,7 +53,12 @@ class SustainableWebDesign {
    * @param {number}  bytes - the data transferred in bytes
    * @return {object} Object containing the energy in kilowatt hours, keyed by system component
    */
-  energyPerByteByComponent(bytes) {
+  energyPerByteByComponent(bytes: number): {
+    consumerDeviceEnergy: number;
+    networkEnergy: number;
+    dataCenterEnergy: number;
+    productionEnergy: number;
+  } {
     const transferedBytesToGb = bytes / fileSize.GIGABYTE;
     const energyUsage = transferedBytesToGb * KWH_PER_GB;
 
@@ -69,13 +78,18 @@ class SustainableWebDesign {
    * @param {number} [carbonIntensity] - carbon intensity to apply to the datacentre values
    * @return {number} the total number in grams of CO2 equivalent emissions
    */
-  co2byComponent(energyBycomponent, carbonIntensity = GLOBAL_INTENSITY) {
-    const returnCO2ByComponent = {};
+  co2byComponent(
+    energyBycomponent: { [key: string]: number },
+    carbonIntensity: number | boolean = GLOBAL_INTENSITY
+  ): { [key: string]: number } {
+    const returnCO2ByComponent: { [key: string]: number } = {};
     for (const [key, value] of Object.entries(energyBycomponent)) {
       // we update the datacentre, as that's what we have information
       // about.
       if (key.startsWith("dataCenterEnergy")) {
-        returnCO2ByComponent[key] = value * carbonIntensity;
+        if (typeof carbonIntensity === "number") {
+          returnCO2ByComponent[key] = value * carbonIntensity;
+        }
       } else {
         // We don't have info about the device location,
         // nor the network path used, nor the production emissions
@@ -96,7 +110,10 @@ class SustainableWebDesign {
    * @param {number} `carbonIntensity` the carbon intensity for datacentre (average figures, not marginal ones)
    * @return {number} the total number in grams of CO2 equivalent emissions
    */
-  perByte(bytes, carbonIntensity = GLOBAL_INTENSITY) {
+  perByte(
+    bytes: number,
+    carbonIntensity: number | boolean = GLOBAL_INTENSITY
+  ): number {
     const energyBycomponent = this.energyPerByteByComponent(bytes);
 
     // when faced with falsy values, fallback to global intensity
@@ -138,7 +155,10 @@ class SustainableWebDesign {
    * @param {number} `carbonIntensity` the carbon intensity for datacentre (average figures, not marginal ones)
    * @return {number} the total number in grams of CO2 equivalent emissions
    */
-  perVisit(bytes, carbonIntensity = GLOBAL_INTENSITY) {
+  perVisit(
+    bytes: number,
+    carbonIntensity: number | boolean = GLOBAL_INTENSITY
+  ) {
     const energyBycomponent = this.energyPerVisitByComponent(bytes);
 
     // when faced with falsy values, fallback to global intensity
@@ -179,7 +199,7 @@ class SustainableWebDesign {
    * @param {number} bytes
    * @return {number} the number of kilowatt hours used
    */
-  energyPerByte(bytes) {
+  energyPerByte(bytes: number) {
     const energyByComponent = this.energyPerByteByComponent(bytes);
 
     // pull out our values…
@@ -206,13 +226,13 @@ class SustainableWebDesign {
    * @return {object} Object containing the energy in kilowatt hours, keyed by system component
    */
   energyPerVisitByComponent(
-    bytes,
-    firstView = FIRST_TIME_VIEWING_PERCENTAGE,
-    returnView = RETURNING_VISITOR_PERCENTAGE,
-    dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD
+    bytes: number,
+    firstView: number = FIRST_TIME_VIEWING_PERCENTAGE,
+    returnView: number = RETURNING_VISITOR_PERCENTAGE,
+    dataReloadRatio: number = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD
   ) {
     const energyBycomponent = this.energyPerByteByComponent(bytes);
-    const cacheAdjustedSegmentEnergy = {};
+    const cacheAdjustedSegmentEnergy: { [key: string]: any } = {};
 
     log({ energyBycomponent });
     const energyValues = Object.values(energyBycomponent);
@@ -238,7 +258,7 @@ class SustainableWebDesign {
    * @param {number} bytes
    * @return {number} the total energy use for the visit, after applying the caching assumptions
    */
-  energyPerVisit(bytes) {
+  energyPerVisit(bytes: number): number {
     // fetch the values using the default caching assumptions
     // const energyValues = Object.values(this.energyPerVisitByComponent(bytes));
 
@@ -266,19 +286,22 @@ class SustainableWebDesign {
 
   // TODO: this method looks like it applies the carbon intensity
   // change to the *entire* system, not just the datacenter.
-  emissionsPerVisitInGrams(energyPerVisit, carbonintensity = GLOBAL_INTENSITY) {
+  emissionsPerVisitInGrams(
+    energyPerVisit: number,
+    carbonintensity: number = GLOBAL_INTENSITY
+  ) {
     return formatNumber(energyPerVisit * carbonintensity);
   }
 
-  annualEnergyInKwh(energyPerVisit, monthlyVisitors = 1000) {
+  annualEnergyInKwh(energyPerVisit: number, monthlyVisitors = 1000) {
     return energyPerVisit * monthlyVisitors * 12;
   }
 
-  annualEmissionsInGrams(co2grams, monthlyVisitors = 1000) {
+  annualEmissionsInGrams(co2grams: number, monthlyVisitors = 1000) {
     return co2grams * monthlyVisitors * 12;
   }
 
-  annualSegmentEnergy(annualEnergy) {
+  annualSegmentEnergy(annualEnergy: number) {
     return {
       consumerDeviceEnergy: formatNumber(annualEnergy * END_USER_DEVICE_ENERGY),
       networkEnergy: formatNumber(annualEnergy * NETWORK_ENERGY),

@@ -3,13 +3,15 @@
 import fs from "fs";
 import path from "path";
 
+// @ts-ignore
 import pagexray from "pagexray";
 
-import CO2 from "./co2.js";
-import { averageIntensity, marginalIntensity } from "./index.js";
+import CO2 from "./co2";
+import { averageIntensity, marginalIntensity } from "./index";
 
 describe("co2", () => {
-  let har, co2;
+  let har: any;
+  let co2: CO2;
 
   describe("1 byte model", () => {
     const TGWF_GREY_VALUE = 0.20497;

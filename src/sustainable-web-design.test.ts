@@ -1,4 +1,4 @@
-import SustainableWebDesign from "./sustainable-web-design.js";
+import SustainableWebDesign from "./sustainable-web-design";
 
 describe("sustainable web design model", () => {
   const swd = new SustainableWebDesign();

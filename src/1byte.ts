@@ -38,13 +38,16 @@ const KWH_PER_BYTE_FOR_NETWORK =
 const KWH_PER_BYTE_FOR_DEVICES = 1.3e-10;
 
 class OneByte {
-  constructor(options) {
+  options?: any;
+  KWH_PER_BYTE_FOR_NETWORK: number;
+
+  constructor(options?: any) {
     this.options = options;
 
     this.KWH_PER_BYTE_FOR_NETWORK = KWH_PER_BYTE_FOR_NETWORK;
   }
 
-  perByte(bytes, green) {
+  perByte(bytes: number, green: boolean) {
     if (bytes < 1) {
       return 0;
     }

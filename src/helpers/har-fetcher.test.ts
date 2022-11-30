@@ -1,6 +1,6 @@
 "use strict";
 
-import getHar from "./har-fetcher.js";
+import getHar from "./har-fetcher";
 
 describe("har-fetcher", () => {
   describe("gerHar", () => {
