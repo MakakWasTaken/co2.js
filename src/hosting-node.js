@@ -20,7 +20,7 @@ import hostingJSON from "./hosting-json.node.js";
  * for parsing as JSON.
  *
  * @param {string} url
- * @return {string}
+ * @return {Promise<string>}
  */
 async function getBody(url) {
   return new Promise(function (resolve, reject) {
