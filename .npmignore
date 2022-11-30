@@ -12,7 +12,7 @@ images/
 public
 
 # Test files
-src/**/*.test.js
+src/**/*.test.ts
 
 # Data
 # exclude mode data

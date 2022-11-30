@@ -1,3 +1,3 @@
-import fileSize from "./file-size.js";
+import fileSize from "./file-size";
 
 export { fileSize };
