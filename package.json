@@ -18,7 +18,8 @@
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
     "format-data": "cd data && prettier --write '**/*.{js,json}'",
     "typescript:check": "tsc --noEmit",
-    "typescript:build": "tsc -b"
+    "typescript:build": "tsc -b",
+    "prepare": "npm run typescript:build"
   },
   "keywords": [
     "sustainability",
