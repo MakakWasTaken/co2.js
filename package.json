@@ -6,9 +6,9 @@
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
-    "test": "jest test",
-    "test:watch": "jest --watch test",
-    "clean": "rm -rf ./lib ./dist",
+    "test": "npm run clean && jest test",
+    "test:watch": "npm run clean && jest --watch test",
+    "clean": "rm -rf ./dist",
     "lint": "eslint --fix . && prettier --write .",
     "build": "tsc -b",
     "check": "npm run check:tsc",
@@ -60,7 +60,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@tgwf/url2green": "https://github.com/MakakWasTaken/url2green-js.git#feature/types",
     "@types/cookie": "^0.5.1",
     "cookie": "^0.5.0",
     "debug": "^4.3.4",
