@@ -203,6 +203,7 @@ export class AxiosHarTracker {
   }
 
   public getGeneratedHar() {
+    this.generateNewEntry();
     this.generatePages();
     return this.generatedHar;
   }
