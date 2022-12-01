@@ -202,10 +202,25 @@ export class AxiosHarTracker {
     this.generatedHar.log.pages = pages;
   }
 
+  private resetHar() {
+    this.generatedHar = {
+      log: {
+        version: "1.2",
+        creator: {
+          name: "axios-har-tracker",
+          version: "0.1.0",
+        },
+        pages: [],
+        entries: [],
+      },
+    };
+  }
+
   public getGeneratedHar() {
-    this.generateNewEntry();
     this.generatePages();
-    return this.generatedHar;
+    const tmpHar = this.generatedHar;
+    this.resetHar();
+    return tmpHar;
   }
 
   private transformObjectToArray(obj: { [key: string]: string }) {
