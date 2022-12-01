@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "rootDirs": ["src", "test"],
+    "rootDirs": ["src", "test", "data"],
     "baseUrl": ".",
 
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+
+    "allowJs": true,
 
     "strict": true,
 

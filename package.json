@@ -3,8 +3,8 @@
   "version": "0.11.3",
   "description": "Work out the co2 of your digital services",
   "type": "commonjs",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "test": "jest test",
     "test:watch": "jest --watch test",
