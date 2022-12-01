@@ -1,6 +1,6 @@
 "use strict";
 
-import hosting from "./hosting";
+import hosting from "../src/hosting";
 import nock from "nock";
 /* eslint-disable jest/no-disabled-tests */
 describe("hostingAPI", () => {

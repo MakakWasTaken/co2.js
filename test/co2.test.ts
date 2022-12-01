@@ -6,8 +6,8 @@ import path from "path";
 // @ts-ignore
 import pagexray from "pagexray";
 
-import CO2 from "./co2";
-import { averageIntensity, marginalIntensity } from "./index";
+import CO2 from "../src/co2";
+import { averageIntensity, marginalIntensity } from "../src";
 
 describe("co2", () => {
   let har: any;
@@ -15,7 +15,7 @@ describe("co2", () => {
 
   describe("1 byte model", () => {
     const TGWF_GREY_VALUE = 0.20497;
-    const TGWF_GREEN_VALUE = 0.54704;
+    // const TGWF_GREEN_VALUE = 0.54704;
     const TGWF_MIXED_VALUE = 0.16718;
 
     const MILLION = 1000000;
@@ -164,7 +164,7 @@ describe("co2", () => {
     const TGWF_MIXED_VALUE = 0.22175;
 
     // We're not passing in a model parameter here to check that SWD is used by default
-    beforeEach(() => {
+    beforeAll(() => {
       co2 = new CO2();
       har = JSON.parse(
         fs.readFileSync(

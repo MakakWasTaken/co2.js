@@ -6,8 +6,8 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest src",
-    "test:watch": "jest --watch src",
+    "test": "jest test",
+    "test:watch": "jest --watch test",
     "clean": "rm -rf ./lib ./dist",
     "lint": "eslint --fix . && prettier --write .",
     "build": "tsc -b",
@@ -21,8 +21,11 @@
     "intensity-data:marginal": "node data/functions/generate_marginal_co2.js",
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
     "format-data": "cd data && prettier --write '**/*.{js,json}'",
-    "preinstall": "npm run build"
+    "prepare": "npm run build"
   },
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "sustainability",
     "carbon",
