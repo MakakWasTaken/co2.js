@@ -38,7 +38,6 @@
   "author": "Chris Adams",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@tgwf/url2green": "https://github.com/MakakWasTaken/url2green-js.git#feature/types",
     "@types/debug": "^4.1.7",
     "@types/jest": "^29.2.3",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
@@ -53,7 +52,6 @@
     "jest": "^28.1.0",
     "nock": "^13.2.4",
     "np": "^7.6.1",
-    "pagexray": "^4.4.2",
     "prettier": "^2.6.2",
     "ts-jest": "^29.0.3"
   },
@@ -61,6 +59,8 @@
     "access": "public"
   },
   "dependencies": {
+    "@tgwf/url2green": "https://github.com/MakakWasTaken/url2green-js.git#feature/types",
+    "pagexray": "^4.4.2",
     "capture-har": "^1.1.1",
     "debug": "^4.3.4",
     "typescript": "^4.9.3"
