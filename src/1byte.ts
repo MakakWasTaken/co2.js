@@ -35,17 +35,22 @@ const FOUR_G_MOBILE = 8.84e-10;
 const KWH_PER_BYTE_FOR_NETWORK =
   (FIXED_NETWORK_WIRED + FIXED_NETWORK_WIFI + FOUR_G_MOBILE) / 3;
 
-const KWH_PER_BYTE_FOR_DEVICES = 1.3e-10;
+// const KWH_PER_BYTE_FOR_DEVICES = 1.3e-10;
+
+interface OneByteOptions {
+  results?: {
+    segment: boolean;
+  };
+}
 
 class OneByte {
-  options?: any;
   results?: {
     segment: boolean;
   };
   KWH_PER_BYTE_FOR_NETWORK: number;
 
-  constructor(options?: any) {
-    this.options = options;
+  constructor(options?: OneByteOptions) {
+    this.results = { segment: options?.results?.segment || false };
 
     this.KWH_PER_BYTE_FOR_NETWORK = KWH_PER_BYTE_FOR_NETWORK;
   }

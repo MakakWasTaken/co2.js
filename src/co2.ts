@@ -1,7 +1,6 @@
 "use strict";
 
 import OneByte from "./1byte";
-import { GLOBAL_GRID_INTENSITY, RENEWABLES_GRID_INTENSITY } from "./constants";
 import SustainableWebDesign from "./sustainable-web-design";
 
 export interface PageXRay {
@@ -21,6 +20,7 @@ export interface PageXRay {
       };
     };
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   assets: any[];
   firstPartyRegEx: RegExp;
 }
@@ -94,7 +94,7 @@ class CO2 {
    * @param {boolean} green
    * @return {number} the amount of CO2 in grammes
    */
-  perVisit(bytes: number, green: boolean = false): number {
+  perVisit(bytes: number, green = false): number {
     if (this.model instanceof SustainableWebDesign) {
       return this.model.perVisit(bytes, green, this.model.results?.segment)
         .total;

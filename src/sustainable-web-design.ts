@@ -24,7 +24,6 @@ import {
   PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD,
 } from "./constants";
 import { formatNumber } from "./helpers";
-import CO2, { CO2Options } from "./co2";
 
 interface SustainableWebDesignOptions {
   test?: number;
@@ -103,7 +102,7 @@ class SustainableWebDesign {
     let networkCarbonIntensity = GLOBAL_GRID_INTENSITY;
     let dataCenterCarbonIntensity = GLOBAL_GRID_INTENSITY;
 
-    let globalEmissions = GLOBAL_GRID_INTENSITY;
+    const globalEmissions = GLOBAL_GRID_INTENSITY;
 
     if (options?.gridIntensity) {
       const { device, network, dataCenter } = options.gridIntensity;
@@ -295,7 +294,7 @@ class SustainableWebDesign {
     const cacheAdjustedSegmentEnergy: { [key: string]: number } = {};
 
     log({ energyBycomponent });
-    const energyValues = Object.values(energyBycomponent);
+    // const energyValues = Object.values(energyBycomponent);
 
     // for this, we want
     for (const [key, value] of Object.entries(energyBycomponent)) {

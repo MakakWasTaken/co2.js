@@ -122,6 +122,7 @@ describe("co2", () => {
           "www.thegreenwebfoundation.org",
           "fonts.googleapis.com",
           "ajax.googleapis.com",
+          "maxcdn.bootstrapcdn.com",
           "assets.digitalclimatestrike.net",
           "cdnjs.cloudflare.com",
           "graphite.thegreenwebfoundation.org",
@@ -135,10 +136,8 @@ describe("co2", () => {
         for (const obj of res) {
           expect(typeof obj.co2).toBe("number");
         }
-        for (const _ of greenDomains) {
-          let index = 0;
-          expect(resWithGreen[index].co2).toBeLessThan(res[index].co2);
-          index++;
+        for (let i = 0; i < greenDomains.length; i++) {
+          expect(resWithGreen[i].co2).toBeLessThan(res[i].co2);
         }
       });
     });
@@ -278,6 +277,7 @@ describe("co2", () => {
           "www.thegreenwebfoundation.org",
           "fonts.googleapis.com",
           "ajax.googleapis.com",
+          "maxcdn.bootstrapcdn.com",
           "assets.digitalclimatestrike.net",
           "cdnjs.cloudflare.com",
           "graphite.thegreenwebfoundation.org",
@@ -291,10 +291,8 @@ describe("co2", () => {
         for (const obj of res) {
           expect(typeof obj.co2).toBe("number");
         }
-        for (const _ of greenDomains) {
-          let index = 0;
-          expect(resWithGreen[index].co2).toBeLessThan(res[index].co2);
-          index++;
+        for (let i = 0; i < greenDomains.length; i++) {
+          expect(resWithGreen[i].co2).toBeLessThan(res[i].co2);
         }
       });
     });
