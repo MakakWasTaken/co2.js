@@ -59,9 +59,9 @@ declare module '@tgwf/co2' {
     }
   }
 
-  export interface hosting {
-    check (domain: string): Promise<boolean>
-    check (domains: string[]): Promise<string[]>
+  export namespace hosting {
+    export function check (domain: string): Promise<boolean>
+    export function check (domains: string[]): Promise<string[]>
   }
 
   interface Intensity {
