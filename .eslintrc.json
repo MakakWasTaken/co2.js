@@ -9,15 +9,17 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["prettier", "jest"],
-  "extends": ["eslint:recommended", "plugin:jest/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["prettier", "jest", "@typescript-eslint"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
   "rules": {
-    "prettier/prettier": [
-      "error",
-      {
-      }
-    ],
-    "no-unused-vars": "off"
+    "prettier/prettier": ["error", {}],
+    "no-unused-vars": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "globals": {
     "fetch": false

@@ -12,8 +12,7 @@ images/
 public
 
 # Test files
-src/**/*.test.js
-src/constants/test-constants.js
+src/**/*.test.ts
 
 # Data
 # exclude mode data

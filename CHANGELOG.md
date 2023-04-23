@@ -122,7 +122,7 @@ This release used a version bump as previously we had released v0.10.0 under a p
 
 ### Removed
 
-- Extracted sqlite usage and dependencies into a separate module, `url2green`. This means  you no longer need to compile SQLite on install.
+- Extracted sqlite usage and dependencies into a separate module, `url2green`. This means you no longer need to compile SQLite on install.
 
 ## [0.5.0] - 2020-03-03
 

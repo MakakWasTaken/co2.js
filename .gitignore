@@ -106,3 +106,5 @@ public/index.js
 # don't track workspace files
 *.vscode
 *.code-workspace
+dist
+node_modules
