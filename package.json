@@ -4,6 +4,7 @@
   "description": "Work out the co2 of your digital services",
   "main": "dist/cjs/index-node.js",
   "module": "dist/esm/index.js",
+  "types": "index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
@@ -26,7 +27,8 @@
     "intensity-data:average": "node data/functions/generate_average_co2.js",
     "intensity-data:marginal": "node data/functions/generate_marginal_co2.js",
     "intensity-data": "npm run intensity-data:average && npm run intensity-data:marginal && npm run format-data",
-    "format-data": "cd data && prettier --write '**/*.{js,json}'"
+    "format-data": "cd data && prettier --write '**/*.{js,json}'",
+    "prepack": "npm run build"
   },
   "keywords": [
     "sustainability",
