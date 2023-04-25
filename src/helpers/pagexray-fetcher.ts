@@ -2,7 +2,7 @@ import { fetchHar } from "./har-fetcher";
 // @ts-ignore
 import pagexray from "pagexray";
 import { PageXRay } from "../co2";
-import { PuppeteerLaunchOptions } from "puppeteer";
+import { LaunchOptions } from "playwright";
 
 /**
  * Takes an url as argument and returns a promise that resolves to a PageXray object
@@ -11,7 +11,7 @@ import { PuppeteerLaunchOptions } from "puppeteer";
  */
 export const getPageXray = async (
   url: string,
-  options?: PuppeteerLaunchOptions
+  options?: LaunchOptions
 ): Promise<PageXRay | undefined> => {
   // Get har
   const har = await fetchHar(url, options);

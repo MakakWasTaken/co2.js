@@ -1,5 +1,5 @@
-import puppeteer, { PuppeteerLaunchOptions } from "puppeteer";
-import PuppeteerHar from "./puppeteer-har";
+import { LaunchOptions, chromium } from "playwright";
+import { PlaywrightHar } from "playwright-har";
 
 /**
  * Fetches a URL and returns a HAR object.
@@ -7,17 +7,18 @@ import PuppeteerHar from "./puppeteer-har";
  */
 const fetchHar = async (
   url: string,
-  options?: PuppeteerLaunchOptions
+  options?: LaunchOptions
 ): Promise<any | undefined> => {
-  const browser = await puppeteer.launch(options);
-  const page = await browser.newPage();
+  const browser = await chromium.launch(options);
+  const context = await browser.newContext();
+  const page = await context.newPage();
 
-  const har = new PuppeteerHar(page);
-  await har.start();
+  const playwrightHar = new PlaywrightHar(page);
+  await playwrightHar.start();
 
   await page.goto(url);
 
-  const response = await har.stop();
+  const response = await playwrightHar.stop();
   await browser.close();
   return response;
 };
