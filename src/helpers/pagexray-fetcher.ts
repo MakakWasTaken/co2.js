@@ -2,6 +2,7 @@ import { fetchHar } from "./har-fetcher";
 // @ts-ignore
 import pagexray from "pagexray";
 import { PageXRay } from "../co2";
+import { PuppeteerLaunchOptions } from "puppeteer";
 
 /**
  * Takes an url as argument and returns a promise that resolves to a PageXray object
@@ -9,10 +10,11 @@ import { PageXRay } from "../co2";
  * @returns {Promise<PageXray>} A promise that resolves to a PageXray object
  */
 export const getPageXray = async (
-  url: string
+  url: string,
+  options?: PuppeteerLaunchOptions
 ): Promise<PageXRay | undefined> => {
   // Get har
-  const har = await fetchHar(url);
+  const har = await fetchHar(url, options);
 
   if (!har) {
     throw new Error("Unable to get har file");
