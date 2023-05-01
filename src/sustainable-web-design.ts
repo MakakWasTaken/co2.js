@@ -28,16 +28,16 @@ import { data as averageIntensity } from "./data/average-intensities";
 interface SustainableWebDesignOptions {
   test?: number;
   gridIntensity?: {
-    device: {
-      value: number;
+    device?: {
+      value?: number;
       country?: keyof typeof averageIntensity;
     };
-    network: {
-      value: number;
+    network?: {
+      value?: number;
       country?: keyof typeof averageIntensity;
     };
-    dataCenter: {
-      value: number;
+    dataCenter?: {
+      value?: number;
       country?: keyof typeof averageIntensity;
     };
   };
@@ -304,22 +304,20 @@ class SustainableWebDesign {
    * of transfer.
    *
    * @param {number} bytes - the data transferred in bytes for loading a webpage
-   * @param {number} firstView - what percentage of visits are loading this page for the first time
-   * @param {number} returnView - what percentage of visits are loading this page for subsequent times
-   * @param {number} dataReloadRatio - what percentage of a page is reloaded on each subsequent page view
+   * @param {object} options - containing the energy in kilowatt hours, keyed by system component
    *
    * @return {object} Object containing the energy in kilowatt hours, keyed by system component
    */
   energyPerVisitByComponent(
     bytes: number,
-    options: SustainableWebDesignOptions = {},
-    firstView = FIRST_TIME_VIEWING_PERCENTAGE,
-    dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD
+    options: SustainableWebDesignOptions = {}
   ): { [key: string]: { first: number; return: number } } {
+    let dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD;
     if (options.dataReloadRatio) {
       dataReloadRatio = options.dataReloadRatio;
     }
 
+    let firstView = FIRST_TIME_VIEWING_PERCENTAGE;
     if (options.firstVisitPercentage) {
       firstView = options.firstVisitPercentage;
     }
@@ -355,19 +353,12 @@ class SustainableWebDesign {
    */
   energyPerVisit(
     bytes: number,
-    options: SustainableWebDesignOptions = {},
-    firstView = FIRST_TIME_VIEWING_PERCENTAGE,
-    dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD
+    options: SustainableWebDesignOptions = {}
   ): number {
     let firstVisits = 0;
     let subsequentVisits = 0;
 
-    const energyBycomponent = this.energyPerVisitByComponent(
-      bytes,
-      options,
-      firstView,
-      dataReloadRatio
-    );
+    const energyBycomponent = this.energyPerVisitByComponent(bytes, options);
 
     Object.values(energyBycomponent).forEach((val) => {
       firstVisits += val.first;
