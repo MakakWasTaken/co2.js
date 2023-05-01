@@ -20,30 +20,29 @@ import {
   GLOBAL_GRID_INTENSITY,
   RENEWABLES_GRID_INTENSITY,
   FIRST_TIME_VIEWING_PERCENTAGE,
-  RETURNING_VISITOR_PERCENTAGE,
   PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD,
 } from "./constants";
 import { formatNumber } from "./helpers";
+import { data as averageIntensity } from "./data/average-intensities";
 
 interface SustainableWebDesignOptions {
   test?: number;
   gridIntensity?: {
     device: {
       value: number;
-      country?: string;
+      country?: keyof typeof averageIntensity;
     };
     network: {
       value: number;
-      country?: string;
+      country?: keyof typeof averageIntensity;
     };
     dataCenter: {
       value: number;
-      country?: string;
+      country?: keyof typeof averageIntensity;
     };
   };
   dataReloadRatio?: number;
   firstVisitPercentage?: number;
-  returnVisitPercentage?: number;
 }
 
 class SustainableWebDesign {
@@ -107,19 +106,38 @@ class SustainableWebDesign {
     if (options?.gridIntensity) {
       const { device, network, dataCenter } = options.gridIntensity;
 
+      // The carbon intensity value for the device country
       if (device?.value) {
         deviceCarbonIntensity = device.value;
+      } else if (device?.country) {
+        // If the user has set a country for the device, then we use the average intensity for that country
+        deviceCarbonIntensity = Number.parseFloat(
+          averageIntensity[device.country]
+        );
       }
+
+      // The carbon intensity value for the network country
       if (network?.value) {
         networkCarbonIntensity = network.value;
+      } else if (network?.country) {
+        // If the user has set a country for the network, then we use the average intensity for that country
+        networkCarbonIntensity = Number.parseFloat(
+          averageIntensity[network.country]
+        );
       }
+
       // If the user has set a carbon intensity value for the datacentre, then that overrides everything and is used
       if (dataCenter?.value) {
         dataCenterCarbonIntensity = dataCenter.value;
+      } else if (dataCenter?.country) {
+        // If the user has set a country for the dataCenter, then we use the average intensity for that country
+        dataCenterCarbonIntensity = Number.parseFloat(
+          averageIntensity[dataCenter.country]
+        );
       }
     }
 
-    // If the user passes in a TRUE value (green web host), then use the renewables intensity value
+    // If the user passes in a TRUE value (green web host), it means that it is a renewable datacenter, then use the renewables intensity value
     if (carbonIntensity === true) {
       dataCenterCarbonIntensity = RENEWABLES_GRID_INTENSITY;
     }
@@ -207,7 +225,7 @@ class SustainableWebDesign {
     bytes: number,
     carbonIntensity = false,
     segmentResults = false,
-    options = {}
+    options: SustainableWebDesignOptions = {}
   ) {
     const energyBycomponent = this.energyPerVisitByComponent(bytes);
 
@@ -218,20 +236,41 @@ class SustainableWebDesign {
       );
     }
 
-    const co2ValuesbyComponent = this.co2byComponent(
-      energyBycomponent,
+    const firstMap: { [key: string]: number } = {};
+    const returnMap: { [key: string]: number } = {};
+
+    Object.entries(energyBycomponent).forEach(([key, value]) => {
+      firstMap[key] = value.first;
+      returnMap[key] = value.return;
+    });
+
+    const firstCo2ValuesbyComponent = this.co2byComponent(
+      firstMap,
+      carbonIntensity,
+      options
+    );
+
+    const returnCo2ValuesByComponent = this.co2byComponent(
+      returnMap,
       carbonIntensity,
       options
     );
 
     // pull out our values…
-    const co2Values = Object.values(co2ValuesbyComponent);
+    const co2Values = [
+      ...Object.values(firstCo2ValuesbyComponent),
+      ...Object.values(returnCo2ValuesByComponent),
+    ];
     const co2ValuesSum = co2Values.reduce(
       (prevValue, currentValue) => prevValue + currentValue
     );
 
     if (segmentResults) {
-      return { ...co2ValuesbyComponent, total: co2ValuesSum };
+      return {
+        ...firstCo2ValuesbyComponent,
+        ...returnCo2ValuesByComponent,
+        total: co2ValuesSum,
+      };
     }
 
     // so we can return their sum
@@ -275,9 +314,8 @@ class SustainableWebDesign {
     bytes: number,
     options: SustainableWebDesignOptions = {},
     firstView = FIRST_TIME_VIEWING_PERCENTAGE,
-    returnView = RETURNING_VISITOR_PERCENTAGE,
     dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD
-  ) {
+  ): { [key: string]: { first: number; return: number } } {
     if (options.dataReloadRatio) {
       dataReloadRatio = options.dataReloadRatio;
     }
@@ -286,12 +324,12 @@ class SustainableWebDesign {
       firstView = options.firstVisitPercentage;
     }
 
-    if (options.returnVisitPercentage) {
-      returnView = options.returnVisitPercentage;
-    }
+    const returnView = 1 - firstView;
 
     const energyBycomponent = this.energyPerByteByComponent(bytes);
-    const cacheAdjustedSegmentEnergy: { [key: string]: number } = {};
+    const cacheAdjustedSegmentEnergy: {
+      [key: string]: { first: number; return: number };
+    } = {};
 
     log({ energyBycomponent });
     // const energyValues = Object.values(energyBycomponent);
@@ -299,11 +337,10 @@ class SustainableWebDesign {
     // for this, we want
     for (const [key, value] of Object.entries(energyBycomponent)) {
       // represent the first load
-      cacheAdjustedSegmentEnergy[`${key} - first`] = value * firstView;
-
-      // then represent the subsequent load
-      cacheAdjustedSegmentEnergy[`${key} - subsequent`] =
-        value * returnView * dataReloadRatio;
+      cacheAdjustedSegmentEnergy[key] = {
+        first: value * firstView,
+        return: value * returnView * dataReloadRatio,
+      };
     }
     log({ cacheAdjustedSegmentEnergy });
 
@@ -312,33 +349,30 @@ class SustainableWebDesign {
 
   /**
    * Accept a figure for bytes, and return the total figure for energy per visit
-   * using the default caching assumptions for loading a single website
    *
    * @param {number} bytes
    * @return {number} the total energy use for the visit, after applying the caching assumptions
    */
-  energyPerVisit(bytes: number): number {
-    // fetch the values using the default caching assumptions
-    // const energyValues = Object.values(this.energyPerVisitByComponent(bytes));
-
+  energyPerVisit(
+    bytes: number,
+    options: SustainableWebDesignOptions = {},
+    firstView = FIRST_TIME_VIEWING_PERCENTAGE,
+    dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD
+  ): number {
     let firstVisits = 0;
     let subsequentVisits = 0;
 
-    const energyBycomponent = Object.entries(
-      this.energyPerVisitByComponent(bytes)
+    const energyBycomponent = this.energyPerVisitByComponent(
+      bytes,
+      options,
+      firstView,
+      dataReloadRatio
     );
 
-    for (const [key, val] of energyBycomponent) {
-      if (key.indexOf("first") > 0) {
-        firstVisits += val;
-      }
-    }
-
-    for (const [key, val] of energyBycomponent) {
-      if (key.indexOf("subsequent") > 0) {
-        subsequentVisits += val;
-      }
-    }
+    Object.values(energyBycomponent).forEach((val) => {
+      firstVisits += val.first;
+      subsequentVisits += val.return;
+    });
 
     return firstVisits + subsequentVisits;
   }
