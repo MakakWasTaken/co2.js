@@ -92,7 +92,7 @@ class SustainableWebDesign {
     energyByComponent: {
       [key: string]: number;
     },
-    carbonIntensity: boolean | number = GLOBAL_GRID_INTENSITY,
+    carbonIntensity = false,
     options: SustainableWebDesignOptions = {}
   ): {
     [key: string]: number;
@@ -138,7 +138,7 @@ class SustainableWebDesign {
     }
 
     // If the user passes in a TRUE value (green web host), it means that it is a renewable datacenter, then use the renewables intensity value
-    if (carbonIntensity === true) {
+    if (carbonIntensity) {
       dataCenterCarbonIntensity = RENEWABLES_GRID_INTENSITY;
     }
 
@@ -185,14 +185,8 @@ class SustainableWebDesign {
     [key: string]: number;
     total: number;
   } {
+    // Divide the bytes into a map of energy for each component
     const energyBycomponent = this.energyPerByteByComponent(bytes);
-
-    // otherwise when faced with non numeric values throw an error
-    if (typeof carbonIntensity !== "boolean") {
-      throw new Error(
-        `perByte expects a boolean for the carbon intensity value. Received: ${carbonIntensity}`
-      );
-    }
 
     const co2ValuesbyComponent = this.co2byComponent(
       energyBycomponent,
@@ -227,14 +221,7 @@ class SustainableWebDesign {
     segmentResults = false,
     options: SustainableWebDesignOptions = {}
   ) {
-    const energyBycomponent = this.energyPerVisitByComponent(bytes);
-
-    if (typeof carbonIntensity !== "boolean") {
-      // otherwise when faced with non numeric values throw an error
-      throw new Error(
-        `perVisit expects a boolean for the carbon intensity value. Received: ${carbonIntensity}`
-      );
-    }
+    const energyBycomponent = this.energyPerVisitByComponent(bytes, options);
 
     const firstMap: { [key: string]: number } = {};
     const returnMap: { [key: string]: number } = {};
@@ -266,9 +253,16 @@ class SustainableWebDesign {
     );
 
     if (segmentResults) {
+      const returnObject: { [key: string]: number } = {};
+      Object.entries(firstCo2ValuesbyComponent).forEach(([key, value]) => {
+        returnObject["first_" + key] = value;
+      });
+      Object.entries(returnCo2ValuesByComponent).forEach(([key, value]) => {
+        returnObject["return_" + key] = value;
+      });
+
       return {
-        ...firstCo2ValuesbyComponent,
-        ...returnCo2ValuesByComponent,
+        ...returnObject,
         total: co2ValuesSum,
       };
     }

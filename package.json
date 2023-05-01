@@ -1,6 +1,6 @@
 {
   "name": "@makakwastaken/co2",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "Work out the co2 of your digital services",
   "type": "commonjs",
   "main": "dist/src/index.js",
