@@ -40,7 +40,9 @@ interface SustainableWebDesignOptions {
       value?: number;
       country?: keyof typeof averageIntensity;
     };
+    renewableEnergy?: number;
   };
+  kwhPerGB?: number;
   dataReloadRatio?: number;
   firstVisitPercentage?: number;
 }
@@ -70,7 +72,8 @@ class SustainableWebDesign {
     dataCenterEnergy: number;
   } {
     const transferedBytesToGb = bytes / fileSize.GIGABYTE;
-    const energyUsage = transferedBytesToGb * KWH_PER_GB;
+    const energyUsage =
+      transferedBytesToGb * (this.options?.kwhPerGB || KWH_PER_GB);
 
     // return the total energy, with breakdown by component
     return {
@@ -92,8 +95,7 @@ class SustainableWebDesign {
     energyByComponent: {
       [key: string]: number;
     },
-    carbonIntensity = false,
-    options: SustainableWebDesignOptions = {}
+    carbonIntensity = false
   ): {
     [key: string]: number;
   } {
@@ -103,8 +105,8 @@ class SustainableWebDesign {
 
     const globalEmissions = GLOBAL_GRID_INTENSITY;
 
-    if (options?.gridIntensity) {
-      const { device, network, dataCenter } = options.gridIntensity;
+    if (this.options?.gridIntensity) {
+      const { device, network, dataCenter } = this.options.gridIntensity;
 
       // The carbon intensity value for the device country
       if (device?.value) {
@@ -139,7 +141,9 @@ class SustainableWebDesign {
 
     // If the user passes in a TRUE value (green web host), it means that it is a renewable datacenter, then use the renewables intensity value
     if (carbonIntensity) {
-      dataCenterCarbonIntensity = RENEWABLES_GRID_INTENSITY;
+      dataCenterCarbonIntensity =
+        this.options?.gridIntensity?.renewableEnergy ||
+        RENEWABLES_GRID_INTENSITY;
     }
 
     const returnCO2ByComponent: { [key: string]: number } = {};
@@ -179,8 +183,7 @@ class SustainableWebDesign {
   perByte(
     bytes: number,
     carbonIntensity = false,
-    segmentResults = false,
-    options: SustainableWebDesignOptions = {}
+    segmentResults = false
   ): {
     [key: string]: number;
     total: number;
@@ -190,8 +193,7 @@ class SustainableWebDesign {
 
     const co2ValuesbyComponent = this.co2byComponent(
       energyBycomponent,
-      carbonIntensity,
-      options
+      carbonIntensity
     );
 
     // pull out our values…
@@ -215,13 +217,8 @@ class SustainableWebDesign {
    * @param {number} `carbonIntensity` the carbon intensity for datacentre (average figures, not marginal ones)
    * @return {number} the total number in grams of CO2 equivalent emissions
    */
-  perVisit(
-    bytes: number,
-    carbonIntensity = false,
-    segmentResults = false,
-    options: SustainableWebDesignOptions = {}
-  ) {
-    const energyBycomponent = this.energyPerVisitByComponent(bytes, options);
+  perVisit(bytes: number, carbonIntensity = false, segmentResults = false) {
+    const energyBycomponent = this.energyPerVisitByComponent(bytes);
 
     const firstMap: { [key: string]: number } = {};
     const returnMap: { [key: string]: number } = {};
@@ -233,14 +230,12 @@ class SustainableWebDesign {
 
     const firstCo2ValuesbyComponent = this.co2byComponent(
       firstMap,
-      carbonIntensity,
-      options
+      carbonIntensity
     );
 
     const returnCo2ValuesByComponent = this.co2byComponent(
       returnMap,
-      carbonIntensity,
-      options
+      carbonIntensity
     );
 
     // pull out our values…
@@ -302,18 +297,17 @@ class SustainableWebDesign {
    *
    * @return {object} Object containing the energy in kilowatt hours, keyed by system component
    */
-  energyPerVisitByComponent(
-    bytes: number,
-    options: SustainableWebDesignOptions = {}
-  ): { [key: string]: { first: number; return: number } } {
+  energyPerVisitByComponent(bytes: number): {
+    [key: string]: { first: number; return: number };
+  } {
     let dataReloadRatio = PERCENTAGE_OF_DATA_LOADED_ON_SUBSEQUENT_LOAD;
-    if (options.dataReloadRatio) {
-      dataReloadRatio = options.dataReloadRatio;
+    if (this.options?.dataReloadRatio) {
+      dataReloadRatio = this.options.dataReloadRatio;
     }
 
     let firstView = FIRST_TIME_VIEWING_PERCENTAGE;
-    if (options.firstVisitPercentage) {
-      firstView = options.firstVisitPercentage;
+    if (this.options?.firstVisitPercentage) {
+      firstView = this.options.firstVisitPercentage;
     }
 
     const returnView = 1 - firstView;
@@ -345,14 +339,11 @@ class SustainableWebDesign {
    * @param {number} bytes
    * @return {number} the total energy use for the visit, after applying the caching assumptions
    */
-  energyPerVisit(
-    bytes: number,
-    options: SustainableWebDesignOptions = {}
-  ): number {
+  energyPerVisit(bytes: number): number {
     let firstVisits = 0;
     let subsequentVisits = 0;
 
-    const energyBycomponent = this.energyPerVisitByComponent(bytes, options);
+    const energyBycomponent = this.energyPerVisitByComponent(bytes);
 
     Object.values(energyBycomponent).forEach((val) => {
       firstVisits += val.first;

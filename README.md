@@ -101,7 +101,7 @@ We use [`np`](https://www.npmjs.com/package/np) to publish new versions of this 
 
 ## Licenses
 
-The code for CO2.js is licensed Apache 2.0. ([What does this mean?](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)))
+The code for CO2.js is licensed Apache 2.0. ([What does this mean?](<https://tldrlegal.com/license/apache-license-2.0-(apache-2.0)>))
 
 The average carbon intensity data from Ember is published under the Creative Commons ShareAlike Attribution Licence ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)). ([What does this mean?](https://www.tldrlegal.com/license/creative-commons-attribution-share-alike-cc-sa))
 

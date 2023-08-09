@@ -3,7 +3,13 @@ import fileSize from "./file-size";
 // SUSTAINABLE WEB DESIGN CONSTANTS
 // this refers to the estimated total energy use for the internet around 2000 TWh,
 // divided by the total transfer it enables around 2500 exabytes
-const KWH_PER_GB = 0.81;
+
+/**
+ * This metric was changed from 0.81 to 0.75. This was done to better match the
+ * information from Andrae's study (https://pisrt.org/psr-press/journals/easl-vol-3-issue-2-2020/new-perspectives-on-internet-electricity-use-in-2030/)
+ * and also the study from Aslan et al. (https://onlinelibrary.wiley.com/doi/epdf/10.1111/jiec.12630)
+ */
+const KWH_PER_GB = 0.75;
 
 // these constants outline how the energy is attributed to
 // different parts of the system in the SWD model
